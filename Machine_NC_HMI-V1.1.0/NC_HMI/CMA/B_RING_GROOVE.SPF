@@ -1,0 +1,16 @@
+PROC B_RING_GROOVE DISPLOF
+;;***********程序功能**********
+;;手动打环形槽子程序 V1.1.0
+;;****************************
+GRIND_WHEEL_RUN(PROCESSER[5]);使用粗磨时砂轮线速度
+
+WHILE($A_DBB[6]==;C轴旋转键选中
+    MSG("头架旋转中...")
+    DO MOV[C]=1 FA[C]=3600;C轴正转
+    G04 F0.5
+    MSG("打环形槽时使用批量磨削粗磨砂轮线速度!")
+ENDWHILE
+
+    DO MOV[C]=0 C轴停止
+RET
+

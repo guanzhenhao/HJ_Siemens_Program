@@ -1,0 +1,60 @@
+PROC DRESSER_0(REAL DR0,REAL DR1,REAL DR2,REAL DR3,REAL DR4,REAL DR5,REAL DR6)  ;DISPLON
+;;**********程序功能**********
+;;蜗杆插补修整子程序 V1.0.0
+;;***************************
+;DR0-总修整次数;DR1-粗修进给;DR2-粗修速度;DR3-精修次数;DR4-精修进给;DR5-精修速度;DR6-砂轮线速度
+;蜗杆程序里界面精修次数为0,精修由蜗杆程序控制,修整总次数的最后一次为精修
+	STOPRE
+	IF DRESSER[7]==0;新砂轮
+		DRESSER[7]=1;旧砂轮
+		STOPRE
+		IF DRESSER[34]==0;抬刀
+			R7=R7+DRESSER[29]/2;修整接触点抬高半个砂轮宽度
+			DRESSER[1]=2*ABS(R7-POSITION[5]);计算当前砂轮直径
+			R3=ROUNDUP((DRESSER[1]-DRESSER[2])/(2*DR1))+1;粗修次数
+			R28=0
+		ENDIF
+	ELSE
+		R3=DR0;蜗杆总修整次数
+	ENDIF
+;;参数赋值
+	R8=DRESSER[29]	  ;砂轮宽度
+	R10=DRESSER[28];修整轮中心间距
+	R11=-DRESSER[4]	  ;左修整轮比右修整轮高出的举例
+	R14=POSITION[6]	  ;双滚轮间距的中心和砂轮中心重合时的坐标
+	R15=POSITION[5]-DRESSER[5]	  ;修整轮圆弧圆心和砂轮中心在V方向重合时的V坐标 砂轮中心V坐标
+	R16=POSITION[6]	  ;修整结束水平轴停泊点
+	R17=POSITION[23]  ;修整结束垂直轴停泊点
+	R18=DR2			  ;粗修速度
+	R19=DR5			  ;精修速度
+	R20=DR1			  ;粗修进给
+	R21=DR4			  ;精修进给
+	R22=500			  ;修整定位速度
+	R23=1000		  ;修整返回速度
+	R29=DRESSER[5]	  ;修整轮圆弧半径,生成蜗杆程序时确定,此处变量只检验
+;判断砂轮是否可用
+	WHILE((DRESSER[1]-2*((R3-1)*DR1+DR4))<=DRESSER[3])
+		MSG("砂轮过小，请跟换砂轮!!!")
+	ENDWHILE
+
+	G90 G01 X=R17 F=3500;砂轮退回修整结束垂直轴停泊点
+;;齿型选择
+	SHAPE=WORM_SHAPE
+
+;砂轮启动
+	GRIND_WHEEL_RUN(DR6)
+;金刚轮启动
+	GRIND_WHEEL_RUN(DRESSER[9])
+;执行蜗杆齿形程序
+	EXECSTRING(SHAPE)
+;计算当前砂轮直径
+	DRESSER[1]=2*ABS(R7-POSITION[5])
+    POSITION[21]=POSITION[7]+DRESSER[1]/2;计算初始磨削接触点坐标
+    POSITION[1]=POSITION[1]-R185;计算磨削接触点坐标
+	M29
+	G90 G01 AX[AX_V]=POSITION[23];V轴回到垂直停靠位置
+	G90 G01 AX[AX_W]=POSITION[6] F4500;砂轮中心与滚轮中心水平Z向重合
+	M29;关闭修整冷却
+	DRESSER_WHEEL_STOP;修整轮停止
+RET
+

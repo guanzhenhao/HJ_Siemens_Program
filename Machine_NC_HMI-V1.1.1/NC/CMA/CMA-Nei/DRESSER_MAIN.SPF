@@ -1,0 +1,28 @@
+PROC DRESSER_MAIN (REAL DR0,REAL DR1,REAL DR2,REAL DR3,REAL DR4,REAL DR5,REAL DR6)  DISPLOF
+;;**********程序功能**********
+;;修整主程序,依据修整器结构选择不同的修整程序(仅适用于内螺纹)V1.1.1
+;;***************************
+;DR0-粗修次数;DR1-粗修进给;DR2-粗修速度;DR3-精修次数;DR4-精修进给;DR5-精修速度;DR6-砂轮线速度
+
+CASE CONFIG[6] OF 0 GOTOF LABEL_0 1 GOTOF LABEL_1 2 GOTOF LABEL_2 DEFAULT GOTOF LABEL_3
+
+LABEL_0:
+        DRESSER_0(DR0,DR1,DR2,DR3,DR4,DR5,DR6)  ;;成型轮向后修整
+        GOTOF END_RET
+LABEL_1:
+        DRESSER_1(DR0,DR1,DR2,DR3,DR4,DR5,DR6)  ;;成型轮向前修整
+        GOTOF END_RET
+LABEL_2:
+        DRESSER_2(DR0,DR1,DR2,DR3,DR4,DR5,DR6)  ;;X-Z插补修整
+        GOTOF END_RET
+LABEL_3:
+        WHILE()
+            MSG("修整器类型选择错误!!!请确认修整器类型。")
+        ENDWHILE
+
+END_RET:
+
+RET
+
+
+

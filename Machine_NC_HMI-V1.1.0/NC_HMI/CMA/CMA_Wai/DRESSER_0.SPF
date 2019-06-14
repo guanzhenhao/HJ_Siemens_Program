@@ -1,0 +1,70 @@
+PROC DRESSER_0(REAL DR0,REAL DR1,REAL DR2,REAL DR3,REAL DR4,REAL DR5,REAL DR6)  DISPLON
+;;**********程序功能**********
+;;成型轮V(仅适用于外螺纹) V1.1.0
+;;***************************
+;DR0-粗修次数;DR1-粗修进给;DR2-粗修速度;DR3-精修次数;DR4-精修进给;DR5-精修速度;DR6-砂轮线速度
+WHILE((DRESSER[1]-2*(DR0*DR1+DR3*DR4))<=DRESSER[3]);判断砂轮是否可用
+    MSG("砂轮过小，请跟换砂轮!!!")
+    M0
+ENDWHILE
+IF(DRESSER[1]>(DRESSER[2]+40*DR4));当前砂轮直径>最大砂轮直径+40*DR4
+    DR0=ROUNDUP((DRESSER[1]-(DRESSER[2]+40*DR4))/(2*DR1));粗修次数
+    DR3=20;粗修次数
+ENDIF
+IF((DRESSER[2]+40*DR4)>=DRESSER[1])AND(DRESSER[1]>DRESSER[2]);最大砂轮直径+40*DR4>当前砂轮直径>最大砂轮直径大
+    DR0=0
+    DR3=ROUNDUP((DRESSER[1]-DRESSER[2])/(2*DR4));精修次数
+ENDIF
+G90 G01 X=POSITION[2] F=3500;砂轮退回工件装夹位
+G90 G01 V=POSITION[0]+3 F3500;V轴抬回安全位
+STOPRE
+IF CONFIG[8]==1;成型V与V-W同时开放
+    G90 G01 W=POSITION[6] F4500;砂轮中心与滚轮中心水平Z向重合
+ENDIF
+GRIND_WHEEL_RUN(DR6);砂轮启动
+M28;修整冷却启动
+DRESSER_WHEEL_RUN(DRESSER[9]);金刚轮启动
+G90 G01 V=POSITION[0]+1 F=3500;X轴快速移动到修整接触点前1mm处
+G90 G01 V=POSITION[0]+0.1 F=200;X轴慢速移动到修整接触点前0.1mm处
+DRESSER[22]=0;
+DRESSER[23]=0;
+WHILE(DRESSER[22]<(DR0+DR3))
+;修整次数,进刀量赋值
+IF DRESSER[22]<DR0
+    DRESSER[19]=DR1
+    DRESSER[20]=DR2
+    MSG("粗修中-->正在进行第"<<DRESSER[22]+1<<"次,还剩"<<DR0-DRESSER[22]-1<<"次完成,进给量:"<<DRESSER[19]<<"mm")   
+ELSE
+    DRESSER[19]=DR4
+    DRESSER[20]=DR5
+    MSG("精修中-->正在进行第"<<DRESSER[22]+1-DR0<<"次,还剩"<<DR3-(DRESSER[22]+1-DR0)<<"次完成,进给量:"<<DRESSER[19]<<"mm")  
+ENDIF
+    POSITION[0]=POSITION[0]-DRESSER[19]
+    G90 G01 V=POSITION[0] F=DRESSER[20]
+    G04 F=DRESSER[16]
+    G91 G01 V=0.1 F=DRESSER[20]
+    DRESSER[1]=2*ABS(POSITION[0]-POSITION[5]);依据当前接触点坐标计算砂轮直径
+    POSITION[21]=POSITION[7]+DRESSER[1]/2;计算初始磨削接触点坐标
+    STOPRE
+    IF DRESSER[7]==0;新砂轮
+        POSITION[1]=POSITION[21]
+    ELSE
+        POSITION[1]=POSITION[1]-DRESSER[19];计算磨削接触点坐标
+    ENDIF
+    DRESSER[22]=DRESSER[22]+1
+    DRESSER[23]=DRESSER[23]+1
+    DRESSER[7]=1;将砂轮标记为旧砂轮
+    IF DRESSER[23]>=20
+        GRIND_WHEEL_RUN(DR6);砂轮启动
+        DRESSER[23]=0
+        G04 F=1.5
+    ENDIF
+    DRFOF
+ENDWHILE
+G90 G01 V=POSITION[0]+3 F3000;V轴回到安全位
+M29;关闭修整冷却
+DRESSER_WHEEL_STOP;修整轮停止
+RET
+
+
+

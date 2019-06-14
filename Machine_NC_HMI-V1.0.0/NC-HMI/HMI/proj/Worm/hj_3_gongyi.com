@@ -1,0 +1,454 @@
+;;;;;;;;;;;;;;;;;;;蜗杆X向批量磨削工艺界面;;;;;;;;;;;;;;;;;;;;;;;;;
+//M(Mask0/$85231/"panel_3_1_chs.png"/)
+    ;;粗磨
+        DEF POSITION_0=(I/*0=$85233,1=$85234//$85203,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[1]"/0,0,0/122,103,60/3);单双磨
+        DEF POSITION_1=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[2]"/0,0,0/122,126,60/7);粗磨次数
+        DEF POSITION_2=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[3]"/0,0,0/122,149,60/7);粗磨进给
+        DEF POSITION_3=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[4]"/0,0,0/122,174,60/7);粗磨头架转速
+        DEF POSITION_4=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[5]"/0,0,0/122,197,60/7);粗磨修整设定
+        DEF POSITION_5=(R///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[6]"/0,0,0/122,221,60/7);粗磨磨削砂轮线速度
+        DEF POSITION_10=(R2///$85203,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[11]"/0,0,0/122,245,60/3);粗磨磨削砂轮转速
+    ;;半精磨
+        DEF POSITION_20=(I/*0=$85233,1=$85234//$85204,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[21]"/0,0,0/212,103,60/3);单双磨
+        DEF POSITION_21=(I///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[22]"/0,0,0/212,126,60/7);半精磨次数
+        DEF POSITION_22=(R/0,0.15//$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[23]"/0,0,0/212,149,60/7);半精磨进给
+        DEF POSITION_23=(R/0,50//$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[24]"/0,0,0/212,174,60/7);半精磨头架转速
+        DEF POSITION_24=(I///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[25]"/0,0,0/212,197,60/7);半精磨修整设定
+        DEF POSITION_25=(R///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[26]"/0,0,0/212,221,60/7);半精磨磨削砂轮线速度
+        DEF POSITION_30=(R2///$85204,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[31]"/0,0,0/212,245,60/3);半精磨磨削砂轮转速
+    ;;精磨
+        DEF POSITION_40=(I/*0=$85233,1=$85234//$85205,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[41]"/0,0,0/302,103,60/3);单双磨
+        DEF POSITION_41=(I///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[42]"/0,0,0/302,126,60/7);精磨次数
+        DEF POSITION_42=(R/0,0.1//$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[43]"/0,0,0/302,149,60/7);精磨进给
+        DEF POSITION_43=(R/0,50//$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[44]"/0,0,0/302,174,60/7);精磨头架转速
+        DEF POSITION_44=(I///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[45]"/0,0,0/302,197,60/7);精磨修整设定
+        DEF POSITION_45=(R///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[46]"/0,0,0/302,221,60/7);精磨磨削砂轮线速度
+        DEF POSITION_50=(R2///$85205,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[51]"/0,0,0/302,245,60/3);精磨磨削砂轮转速
+    ;;终磨
+        DEF POSITION_60=(I/*0=$85233,1=$85234//$85206,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[61]"/0,0,0/392,103,60/3);单双磨
+        DEF POSITION_61=(I///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[62]"/0,0,0/392,126,60/7);终磨次数
+        DEF POSITION_62=(R/0,0.05//$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[63]"/0,0,0/392,149,60/7);终磨进给
+        DEF POSITION_63=(R/0,50//$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[64]"/0,0,0/392,174,60/7);终磨头架转速
+        DEF POSITION_64=(I///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[65]"/0,0,0/392,197,60/7);终磨修整设定
+        DEF POSITION_65=(R///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[66]"/0,0,0/392,221,60/7);终磨磨削砂轮线速度
+        DEF POSITION_70=(R2///$85206,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[71]"/0,0,0/392,245,60/3);终磨磨削砂轮转速
+
+        DEF VAR5=(R////WR4//"/NC/_N_NC_GD2_ACX/DRESSER[2]"/0,0,0/0,0,0);当前砂轮直径
+        DEF VAR6=(R///$85219,$85219,,$85043/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[107]"/100,5,150/210,5,100/1);设定磨削总量
+        DEF VAR7=(R///$85223,$85223,,$85043/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[108]"/100,25,150/210,25,100/1);已磨削量
+        DEF VAR8=(I///$85242,$85240,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[109]"/300,5,100/380,5,60/1);工件计数
+        DEF VAR9=(I///$85243,$85241,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[110]"/300,25,100/380,25,60/1);修整设定
+        DEF BIAOJI=(R/*0=$85191,1=$85192//$85089,$85089,,/WR4//"/NC/_N_NC_GD2_ACX/GRIND[28]"/0,0,0/380,10,70/3,4);0=X向磨削/1=双齿面磨削
+    ;;定义按键
+        VS1=($85166,ac7,se3)
+        VS2=($85167,ac7,se1)
+        VS8=($85005,ac7,se1)
+        PRESS(VS1)
+            LM("Mask0","hj_3_gongyi.com",0);磨削界面
+        END_PRESS
+        PRESS(VS2)
+            LM("Mask1","hj_3_gongyi.com",0);磨削界面
+        END_PRESS
+        PRESS(VS8)
+            IF BIAOJI.VAL==0
+				LM("Mask0","hj_3_moxue.com",0);磨削界面
+			ELSE
+				LM("Mask1","hj_3_moxue.com",0);磨削界面
+			ENDIF
+        END_PRESS
+    ;;CHANGE事件
+        CHANGE(POSITION_5)
+            POSITION_10.VAL=POSITION_5.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_25)
+            POSITION_30.VAL=POSITION_25.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_45)
+            POSITION_50.VAL=POSITION_45.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_65)
+            POSITION_70.VAL=POSITION_65.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        ;;总磨削余量计算
+
+        CHANGE(POSITION_1)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_2)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_20)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_21)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_22)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_40)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_41)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_42)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_60)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_61)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_62)
+            CALL("UP1")
+        END_CHANGE
+        SUB(UP1)
+            VAR6.VAL=POSITION_1.VAL*POSITION_2.VAL+POSITION_21.VAL*POSITION_22.VAL+POSITION_41.VAL*POSITION_42.VAL+POSITION_61.VAL*POSITION_62.VAL
+        END_SUB
+//END
+
+;;;;;;;;;;;;;;;;;;;蜗杆X单件调整工艺界面;;;;;;;;;;;;;;;;;;;;;;;;;
+//M(Mask1/$85232/"panel_3_1_chs.png"/)
+    ;;粗磨
+        DEF POSITION_0=(I/*0=$85233,1=$85234//$85203,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[121]"/0,0,0/122,103,60/3);单双磨
+        DEF POSITION_1=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[122]"/0,0,0/122,126,60/7);粗磨次数
+        DEF POSITION_2=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[123]"/0,0,0/122,149,60/7);粗磨进给
+        DEF POSITION_3=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[124]"/0,0,0/122,174,60/7);粗磨头架转速
+        DEF POSITION_4=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[125]"/0,0,0/122,197,60/7);粗磨修整设定
+        DEF POSITION_5=(R///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[126]"/0,0,0/122,221,60/7);粗磨磨削砂轮线速度
+        DEF POSITION_10=(R2///$85203,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[131]"/0,0,0/122,245,60/3);粗磨磨削砂轮转速
+    ;;半精磨
+        DEF POSITION_20=(I/*0=$85233,1=$85234//$85204,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[141]"/0,0,0/212,103,60/3);单双磨
+        DEF POSITION_21=(I///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[142]"/0,0,0/212,126,60/7);半精磨次数
+        DEF POSITION_22=(R/0,0.15//$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[143]"/0,0,0/212,149,60/7);半精磨进给
+        DEF POSITION_23=(R/0,50//$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[144]"/0,0,0/212,174,60/7);半精磨头架转速
+        DEF POSITION_24=(I///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[145]"/0,0,0/212,197,60/7);半精磨修整设定
+        DEF POSITION_25=(R///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[146]"/0,0,0/212,221,60/7);半精磨磨削砂轮线速度
+        DEF POSITION_30=(R2///$85204,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[151]"/0,0,0/212,245,60/3);半精磨磨削砂轮转速
+    ;;精磨
+        DEF POSITION_40=(I/*0=$85233,1=$85234//$85205,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[161]"/0,0,0/302,103,60/3);单双磨
+        DEF POSITION_41=(I///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[162]"/0,0,0/302,126,60/7);精磨次数
+        DEF POSITION_42=(R/0,0.1//$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[163]"/0,0,0/302,149,60/7);精磨进给
+        DEF POSITION_43=(R/0,50//$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[164]"/0,0,0/302,174,60/7);精磨头架转速
+        DEF POSITION_44=(I///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[165]"/0,0,0/302,197,60/7);精磨修整设定
+        DEF POSITION_45=(R///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[166]"/0,0,0/302,221,60/7);精磨磨削砂轮线速度
+        DEF POSITION_50=(R2///$85205,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[171]"/0,0,0/302,245,60/3);精磨磨削砂轮转速
+    ;;终磨
+        DEF POSITION_60=(I/*0=$85233,1=$85234//$85206,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[181]"/0,0,0/392,103,60/3);单双磨
+        DEF POSITION_61=(I///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[182]"/0,0,0/392,126,60/7);终磨次数
+        DEF POSITION_62=(R/0,0.05//$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[183]"/0,0,0/392,149,60/7);终磨进给
+        DEF POSITION_63=(R/0,50//$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[184]"/0,0,0/392,174,60/7);终磨头架转速
+        DEF POSITION_64=(I///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[185]"/0,0,0/392,197,60/7);终磨修整设定
+        DEF POSITION_65=(R///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[186]"/0,0,0/392,221,60/7);终磨磨削砂轮线速度
+        DEF POSITION_70=(R2///$85206,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[191]"/0,0,0/392,245,60/3);终磨磨削砂轮转速
+
+        DEF VAR5=(R////WR4//"/NC/_N_NC_GD2_ACX/DRESSER[2]"/0,0,0/0,0,0);当前砂轮直径
+        DEF VAR6=(R///$85219,$85219,,$85043/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[107]"/100,5,150/210,5,100/1);设定磨削总量
+        DEF VAR7=(R///$85223,$85223,,$85043/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[108]"/100,25,150/210,25,100/1);已磨削量
+        DEF VAR8=(I///$85242,$85240,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[109]"/300,5,100/380,5,60/1);工件计数
+        DEF VAR9=(I///$85243,$85241,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[110]"/300,25,100/380,25,60/1);修整设定
+        DEF BIAOJI=(R/*0=$85191,1=$85192//$85089,$85089,,/WR4//"/NC/_N_NC_GD2_ACX/GRIND[28]"/0,0,0/380,10,70/3,4);0=X向磨削/1=双齿面磨削
+    ;;定义按键 
+        VS1=($85166,ac7,se1)
+        VS2=($85167,ac7,se3)
+        VS8=($85005,ac7,se1)
+        PRESS(VS1)
+            LM("Mask0","hj_3_gongyi.com",0);磨削界面
+        END_PRESS
+        PRESS(VS2)
+            LM("Mask1","hj_3_gongyi.com",0);磨削界面
+        END_PRESS
+        PRESS(VS8)
+            IF BIAOJI.VAL==0
+				LM("Mask0","hj_3_moxue.com",0);磨削界面
+			ELSE
+				LM("Mask1","hj_3_moxue.com",0);磨削界面
+			ENDIF
+        END_PRESS
+    ;;CHANGE事件
+        CHANGE(POSITION_5)
+            POSITION_10.VAL=POSITION_5.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_25)
+            POSITION_30.VAL=POSITION_25.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_45)
+            POSITION_50.VAL=POSITION_45.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_65)
+            POSITION_70.VAL=POSITION_65.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        ;;总磨削余量计算
+        CHANGE(POSITION_1)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_2)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_20)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_21)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_22)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_40)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_41)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_42)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_60)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_61)
+            CALL("UP1")
+        END_CHANGE
+        CHANGE(POSITION_62)
+            CALL("UP1")
+        END_CHANGE
+        SUB(UP1)
+            VAR6.VAL=POSITION_1.VAL*POSITION_2.VAL+POSITION_21.VAL*POSITION_22.VAL+POSITION_41.VAL*POSITION_42.VAL+POSITION_61.VAL*POSITION_62.VAL
+        END_SUB
+//END
+
+;;;;;;;;;;;;;;;;;;;蜗杆双齿面批量磨削工艺界面;;;;;;;;;;;;;;;;;;;;;;;;;
+//M(Mask2/$85231/"panel_3_2_chs.png"/)
+    ;;粗磨
+        DEF POSITION_0=(I/*0=$85233,1=$85234//$85203,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[1]"/0,0,0/138,95,60/3,4);单双磨
+      ;;X向
+        DEF POSITION_1=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[2]"/0,0,0/138,118,60/7);粗磨次数
+        DEF POSITION_2=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[3]"/0,0,0/138,141,60/7);粗磨进给
+        DEF POSITION_3=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[4]"/0,0,0/138,165,60/7);粗磨头架转速
+        DEF POSITION_4=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[5]"/0,0,0/138,188,60/7);粗磨修整设定
+      ;;Z向
+        DEF POSITION_6=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[13]"/0,0,0/138,220,60/7);粗磨次数
+        DEF POSITION_7=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[14]"/0,0,0/138,243,60/7);粗磨进给
+        DEF POSITION_8=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[15]"/0,0,0/138,267,60/7);粗磨头架转速
+        DEF POSITION_9=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[16]"/0,0,0/138,290,60/7);粗磨修整设定
+
+        DEF POSITION_5=(R///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[6]"/0,0,0/138,322,60/7);粗磨磨削砂轮线速度
+        DEF POSITION_10=(R2///$85203,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[11]"/0,0,0/138,345,60/3);粗磨磨削砂轮转速
+    ;;半精磨
+        DEF POSITION_20=(I/*0=$85233,1=$85234//$85204,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[21]"/0,0,0/228,95,60/3,4);单双磨
+      ;;X向
+        DEF POSITION_21=(I///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[22]"/0,0,0/228,118,60/7);半精磨次数
+        DEF POSITION_22=(R/0,0.15//$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[23]"/0,0,0/228,141,60/7);半精磨进给
+        DEF POSITION_23=(R/0,50//$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[24]"/0,0,0/228,165,60/7);半精磨头架转速
+        DEF POSITION_24=(I///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[25]"/0,0,0/228,188,60/7);半精磨修整设定
+      ;;Z向
+        DEF POSITION_26=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[33]"/0,0,0/228,220,60/7);粗磨次数
+        DEF POSITION_27=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[34]"/0,0,0/228,243,60/7);粗磨进给
+        DEF POSITION_28=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[35]"/0,0,0/228,267,60/7);粗磨头架转速
+        DEF POSITION_29=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[36]"/0,0,0/228,290,60/7);粗磨修整设定
+
+        DEF POSITION_25=(R///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[26]"/0,0,0/228,322,60/7);半精磨磨削砂轮线速度
+        DEF POSITION_30=(R2///$85204,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[31]"/0,0,0/228,345,60/3);半精磨磨削砂轮转速
+    ;;精磨
+        DEF POSITION_40=(I/*0=$85233,1=$85234//$85205,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[41]"/0,0,0/318,95,60/3,4);单双磨
+      ;;X向
+        DEF POSITION_41=(I///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[42]"/0,0,0/318,118,60/7);精磨次数
+        DEF POSITION_42=(R/0,0.1//$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[43]"/0,0,0/318,141,60/7);精磨进给
+        DEF POSITION_43=(R/0,50//$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[44]"/0,0,0/318,165,60/7);精磨头架转速
+        DEF POSITION_44=(I///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[45]"/0,0,0/318,188,60/7);精磨修整设定
+      ;;Z向
+        DEF POSITION_46=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[53]"/0,0,0/318,220,60/7);粗磨次数
+        DEF POSITION_47=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[54]"/0,0,0/318,243,60/7);粗磨进给
+        DEF POSITION_48=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[55]"/0,0,0/318,267,60/7);粗磨头架转速
+        DEF POSITION_49=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[56]"/0,0,0/318,290,60/7);粗磨修整设定
+        
+        DEF POSITION_45=(R///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[46]"/0,0,0/318,322,60/7);精磨磨削砂轮线速度
+        DEF POSITION_50=(R2///$85205,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[51]"/0,0,0/318,345,60/3);精磨磨削砂轮转速
+    ;;终磨
+        DEF POSITION_60=(I/*0=$85233,1=$85234//$85206,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[61]"/0,0,0/408,95,60/3,4);单双磨
+      ;;X向       
+        DEF POSITION_61=(I///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[62]"/0,0,0/408,118,60/7);终磨次数
+        DEF POSITION_62=(R/0,0.05//$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[63]"/0,0,0/408,141,60/7);终磨进给
+        DEF POSITION_63=(R/0,50//$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[64]"/0,0,0/408,165,60/7);终磨头架转速
+        DEF POSITION_64=(I///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[65]"/0,0,0/408,188,60/7);终磨修整设定
+      ;;Z向
+        DEF POSITION_66=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[73]"/0,0,0/408,220,60/7);粗磨次数
+        DEF POSITION_67=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[74]"/0,0,0/408,243,60/7);粗磨进给
+        DEF POSITION_68=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[75]"/0,0,0/408,267,60/7);粗磨头架转速
+        DEF POSITION_69=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[76]"/0,0,0/408,290,60/7);粗磨修整设定
+
+        DEF POSITION_65=(R///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[66]"/0,0,0/408,322,60/7);终磨磨削砂轮线速度
+        DEF POSITION_70=(R2///$85206,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[71]"/0,0,0/408,345,60/3);终磨磨削砂轮转速
+    ;;提示参数
+        DEF VAR5=(R////WR4//"/NC/_N_NC_GD2_ACX/DRESSER[2]"/0,0,0/0,0,0);当前砂轮直径    
+        DEF BIAOJI=(R/*0=$85191,1=$85192//$85089,$85089,,/WR4//"/NC/_N_NC_GD2_ACX/GRIND[28]"/0,0,0/380,10,70/3,4);0=X向磨削/1=双齿面磨削
+	    DEF CHOOSE_1=(R/*0=$85041,1=$85040//$85246,$85246,,/WR2//"/NC/_N_NC_GD2_ACX/GRIND[29]"/100,5,150/210,5,100/7,4);是否X向磨削
+        DEF CHOOSE_2=(R/*0=$85041,1=$85040//$85247,$85247,,/WR2//"/NC/_N_NC_GD2_ACX/GRIND[30]"/100,25,150/210,25,100/7,4);是否Z向磨削
+        DEF CHOOSE_3=(R/*0=$85248,1=$85249,2=$85250//$85251,$85251,,/WR4//"/NC/_N_NC_GD2_ACX/GRIND[31]"/0,0,00/330,25,100/7,4);Z向磨削选择
+    ;;定义按键
+        VS1=($85166,ac7,se3)
+        VS2=($85167,ac7,se1)
+        VS8=($85005,ac7,se1)
+        PRESS(VS1)
+            LM("Mask2","hj_3_gongyi.com",0);磨削界面
+        END_PRESS
+        PRESS(VS2)
+            LM("Mask3","hj_3_gongyi.com",0);磨削界面
+        END_PRESS
+        PRESS(VS8)
+            IF BIAOJI.VAL==0
+				LM("Mask0","hj_3_moxue.com",0);磨削界面
+			ELSE
+				LM("Mask1","hj_3_moxue.com",0);磨削界面
+			ENDIF
+        END_PRESS
+    ;;CHANGE事件
+        CHANGE(POSITION_5)
+            POSITION_10.VAL=POSITION_5.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+
+        CHANGE(POSITION_25)
+            POSITION_30.VAL=POSITION_25.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+
+        CHANGE(POSITION_45)
+            POSITION_50.VAL=POSITION_45.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+
+        CHANGE(POSITION_65)
+            POSITION_70.VAL=POSITION_65.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+
+        CHANGE(CHOOSE_2)
+            IF CHOOSE_2.VAL==1
+                CHOOSE_3.WR=2
+            ELSE
+                CHOOSE_3.WR=4
+            ENDIF
+        END_CHANGE
+//END
+
+;;;;;;;;;;;;;;;;;;;蜗杆双齿面单件调整工艺界面;;;;;;;;;;;;;;;;;;;;;;;;;
+//M(Mask3/$85232/"panel_3_2_chs.png"/)
+    ;;粗磨
+        DEF POSITION_0=(I/*0=$85233,1=$85234//$85203,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[121]"/0,0,0/138,95,60/3);单双磨
+      ;;X向
+        DEF POSITION_1=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[122]"/0,0,0/138,118,60/7);粗磨次数
+        DEF POSITION_2=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[123]"/0,0,0/138,141,60/7);粗磨进给
+        DEF POSITION_3=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[124]"/0,0,0/138,165,60/7);粗磨头架转速
+        DEF POSITION_4=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[125]"/0,0,0/138,188,60/7);粗磨修整设定
+      ;;Z向
+        DEF POSITION_6=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[133]"/0,0,0/138,220,60/7);粗磨次数
+        DEF POSITION_7=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[134]"/0,0,0/138,243,60/7);粗磨进给
+        DEF POSITION_8=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[135]"/0,0,0/138,267,60/7);粗磨头架转速
+        DEF POSITION_9=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[136]"/0,0,0/138,290,60/7);粗磨修整设定
+
+        DEF POSITION_5=(R///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[126]"/0,0,0/138,322,60/7);粗磨磨削砂轮线速度
+        DEF POSITION_10=(R2///$85203,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[131]"/0,0,0/138,345,60/3);粗磨磨削砂轮转速
+    ;;半精磨
+        DEF POSITION_20=(I/*0=$85233,1=$85234//$85204,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[141]"/0,0,0/228,95,60/3);单双磨
+      ;;X向
+        DEF POSITION_21=(I///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[142]"/0,0,0/228,118,60/7);半精磨次数
+        DEF POSITION_22=(R/0,0.15//$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[143]"/0,0,0/228,141,60/7);半精磨进给
+        DEF POSITION_23=(R/0,50//$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[144]"/0,0,0/228,165,60/7);半精磨头架转速
+        DEF POSITION_24=(I///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[145]"/0,0,0/228,188,60/7);半精磨修整设定
+      ;;Z向
+        DEF POSITION_26=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[153]"/0,0,0/228,220,60/7);粗磨次数
+        DEF POSITION_27=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[154]"/0,0,0/228,243,60/7);粗磨进给
+        DEF POSITION_28=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[155]"/0,0,0/228,267,60/7);粗磨头架转速
+        DEF POSITION_29=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[156]"/0,0,0/228,290,60/7);粗磨修整设定
+
+        DEF POSITION_25=(R///$85204,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[146]"/0,0,0/228,322,60/7);半精磨磨削砂轮线速度
+        DEF POSITION_30=(R2///$85204,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[151]"/0,0,0/228,345,60/3);半精磨磨削砂轮转速
+    ;;精磨
+        DEF POSITION_40=(I/*0=$85233,1=$85234//$85205,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[161]"/0,0,0/318,95,60/3);单双磨
+      ;;X向
+        DEF POSITION_41=(I///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[162]"/0,0,0/318,118,60/7);精磨次数
+        DEF POSITION_42=(R/0,0.1//$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[163]"/0,0,0/318,141,60/7);精磨进给
+        DEF POSITION_43=(R/0,50//$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[164]"/0,0,0/318,165,60/7);精磨头架转速
+        DEF POSITION_44=(I///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[165]"/0,0,0/318,188,60/7);精磨修整设定
+      ;;Z向
+        DEF POSITION_46=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[173]"/0,0,0/318,220,60/7);粗磨次数
+        DEF POSITION_47=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[174]"/0,0,0/318,243,60/7);粗磨进给
+        DEF POSITION_48=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[175]"/0,0,0/318,267,60/7);粗磨头架转速
+        DEF POSITION_49=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[176]"/0,0,0/318,290,60/7);粗磨修整设定
+        
+        DEF POSITION_45=(R///$85205,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[166]"/0,0,0/318,322,60/7);精磨磨削砂轮线速度
+        DEF POSITION_50=(R2///$85205,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[171]"/0,0,0/318,345,60/3);精磨磨削砂轮转速
+    ;;终磨
+        DEF POSITION_60=(I/*0=$85233,1=$85234//$85206,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[181]"/0,0,0/400,95,60/3);单双磨
+      ;;X向       
+        DEF POSITION_61=(I///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[182]"/0,0,0/408,118,60/7);终磨次数
+        DEF POSITION_62=(R/0,0.05//$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[183]"/0,0,0/408,141,60/7);终磨进给
+        DEF POSITION_63=(R/0,50//$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[184]"/0,0,0/408,165,60/7);终磨头架转速
+        DEF POSITION_64=(I///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[185]"/0,0,0/408,188,60/7);终磨修整设定
+      ;;Z向
+        DEF POSITION_66=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[193]"/0,0,0/408,220,60/7);粗磨次数
+        DEF POSITION_67=(R/0,0.2//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[194]"/0,0,0/408,243,60/7);粗磨进给
+        DEF POSITION_68=(R/0,50//$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[195]"/0,0,0/408,267,60/7);粗磨头架转速
+        DEF POSITION_69=(I///$85203,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[196]"/0,0,0/408,290,60/7);粗磨修整设定
+
+        DEF POSITION_65=(R///$85206,,,/WR2//"/NC/_N_NC_GD2_ACX/PROCESSER[186]"/0,0,0/408,322,60/7);终磨磨削砂轮线速度
+        DEF POSITION_70=(R2///$85206,,,/WR1//"/NC/_N_NC_GD2_ACX/PROCESSER[191]"/0,0,0/408,345,60/3);终磨磨削砂轮转速
+
+        DEF VAR5=(R////WR4//"/NC/_N_NC_GD2_ACX/DRESSER[2]"/0,0,0/0,0,0);当前砂轮直径
+        DEF BIAOJI=(R/*0=$85191,1=$85192//$85089,$85089,,/WR4//"/NC/_N_NC_GD2_ACX/GRIND[28]"/0,0,0/380,10,70/3,4);0=X向磨削/1=双齿面磨削
+	    DEF CHOOSE_1=(R/*0=$85041,1=$85040//$85246,$85246,,/WR2//"/NC/_N_NC_GD2_ACX/GRIND[29]"/100,5,150/210,5,100/7,4);是否X向磨削
+        DEF CHOOSE_2=(R/*0=$85041,1=$85040//$85247,$85247,,/WR2//"/NC/_N_NC_GD2_ACX/GRIND[30]"/100,25,150/210,25,100/7,4);是否Z向磨削
+        DEF CHOOSE_3=(R/*0=$85248,1=$85249,2=$85250//$85251,$85251,,/WR4//"/NC/_N_NC_GD2_ACX/GRIND[31]"/0,0,00/330,25,100/7,4);Z向磨削选择
+    ;;定义按键 
+        VS1=($85166,ac7,se1)
+        VS2=($85167,ac7,se3)
+        VS8=($85005,ac7,se1)
+        PRESS(VS1)
+            LM("Mask2","hj_3_gongyi.com",0);磨削界面
+        END_PRESS
+        PRESS(VS2)
+            LM("Mask3","hj_3_gongyi.com",0);磨削界面
+        END_PRESS
+        PRESS(VS8)
+            IF BIAOJI.VAL==0
+				LM("Mask0","hj_3_moxue.com",0);磨削界面
+			ELSE
+				LM("Mask1","hj_3_moxue.com",0);磨削界面
+			ENDIF
+        END_PRESS
+    ;;CHANGE事件
+        CHANGE(POSITION_5)
+            POSITION_10.VAL=POSITION_5.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_9)
+            POSITION_11.VAL=POSITION_9.VAL*60000/(PI*VAR5.VAL);粗磨修整砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_25)
+            POSITION_30.VAL=POSITION_25.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_29)
+            POSITION_31.VAL=POSITION_29.VAL*60000/(PI*VAR5.VAL);粗磨修整砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_45)
+            POSITION_50.VAL=POSITION_45.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_49)
+            POSITION_51.VAL=POSITION_49.VAL*60000/(PI*VAR5.VAL);粗磨修整砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_65)
+            POSITION_70.VAL=POSITION_65.VAL*60000/(PI*VAR5.VAL);粗磨砂轮转速
+        END_CHANGE
+        CHANGE(POSITION_69)
+            POSITION_71.VAL=POSITION_69.VAL*60000/(PI*VAR5.VAL);粗磨修整砂轮转速
+        END_CHANGE
+        CHANGE(CHOOSE_2)
+            IF CHOOSE_2.VAL==1
+                CHOOSE_3.WR=2
+            ELSE
+                CHOOSE_3.WR=4
+            ENDIF
+        END_CHANGE
+//END
+
+
+
+

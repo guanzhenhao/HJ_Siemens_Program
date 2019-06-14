@@ -1,0 +1,28 @@
+PROC DRESSER_WHEEL_RUN(REAL LINE_SPEED) DISPLOF
+;;**********程序功能**********
+;;修整轮启动 V1.0.0
+;LINE_SPEED砂轮线速度
+;;***************************
+DEF REAL DR0,DR1,DR2
+DR0=LINE_SPEED*60000/($PI*DRESSER[8]);依据线速度计算修整轮转速
+IF $A_DBB[13]==0;修整轮当前未启动
+    DR2=3;修整轮启动等待时间
+ENDIF
+
+IF (CONFIG[4]==0) OR (CONFIG[4]==2);(0模拟量/1伺服2异步电机)
+    R297=DR0
+    G4 F0.2
+    M63;修整轮启动
+ELSE
+    IF (CONFIG[3]==0) OR (CONFIG[3]==2)
+        M1=3 S1=DR0
+    ELSE
+        M2=3 S2=DR0
+    ENDIF
+ENDIF
+
+G04 F=DR2
+
+RET
+
+

@@ -1,0 +1,13 @@
+PROC M_OPEN DISPLOF
+;;V1.1.0
+G90 G01 AX[AX_V]=R17 F1000
+G90 G01 AX[AX_W]=R16 F3000
+;V-W修整不需要复位螺旋角
+	IF CONFIG[6]==2 GOTOF MARK_0
+	RESET_ANGLE;螺旋升角复位
+MARK_0:
+    R185=0
+    ;修整冷却启动
+    M28
+RET
+

@@ -1,0 +1,62 @@
+PROC C_OPERATION_AUTO DISPLOF
+;;**********程序功能**********
+;;内螺纹自动对刀程序 V1.0.0
+;;适用于内螺纹探头测量反相器孔
+;;***************************
+MSG("正在运行到测量位置")
+G90 G01 Z=INI[48] F4000;Z轴快速移动到测量安全位置
+G90 G01 C=INI[49] F10800;C轴移动到自动对刀角度
+G90 G01 X=TOOL_SET[23]-INI[34]/2-5 F3000;
+MSG("测头伸出中")
+M33
+STOPRE
+WHILE($A_DBB[8]<>1);检测探头是否伸出到位
+    MSG("等待测头伸出到位!!!")
+    G04F F0.2
+ENDWHILE
+MEAS=1 G90 G01 X=TOOL_SET[23]-INI[34]/2+3*TOOL_SET[9] F=1000
+STOPRE
+IF $AC_MEA[1]==1 GOTOF ERROR1;如果测头有信号报错
+MEAS=1 G91 G01 Z=-200 F=500
+STOPRE
+IF $AC_MEA[1]==0 GOTOF ERROR2;如果测头没信号报错
+STOPRE
+WHILE($A_PROBE[1]==1)
+    G91 G01 Z=2 F=500
+ENDWHILE
+MEAS=1 G91 G01 Z=-200 F=50
+STOPRE
+INI[50]=$AA_MM[Z];记录右端面坐标
+G91 G01 Z50 F4000
+G90 G01 X=TOOL_SET[23]-INI[34]/2-5 F3000;
+G90 G01 Z=-(INI[50]-INI[35]-TOOL_SET[9]);测头走到反相器孔中心
+MEAS=1 G90 G01 X=TOOL_SET[23]-INI[34]/2+3*TOOL_SET[9] F1000;测头进入反相器孔
+STOPRE
+IF $AC_MEA[1]==1 GOTOF ERROR3
+
+IF TOOL_SET[22]==0;圆孔
+    C_OPERATION_AUTO_YUAN;调用圆形孔测量动作
+ELSE
+    C_OPERATION_AUTO_YAO;调用腰型孔测量动作
+ENDIF
+GOTOF END_RET
+
+;;报警提示定义
+ERROR1：;测头不该有信号时检测到测头信号报该错误
+MSG("测量错误,检测到误碰撞!!!")
+M0
+GOTOB ERROR1
+
+ERROR2：;测头该有信号时没检测到测头信号报该错误
+MSG("测量错误，测头未检测到信号!!!")
+M0
+GOTOB ERROR2
+
+ERROR3：
+MSG("测量错误，请确认自动对刀时反相器孔朝向探头的角度!!!")
+M0
+GOTOB ERROR3
+
+END_RET:
+RET
+

@@ -1,0 +1,87 @@
+PROC C_OPERATION_AUTO_YUAN DISPLON
+;;**********程序功能**********
+;;内螺纹自动对刀子程序程序V1.1.0
+;;探针测量圆形反相器孔孔动作程序
+;;***************************
+DEF REAL DR1,DR2,DR3,DR4,DR5,DR6
+;;寻找C向中心
+MSG("反相器孔测量开始,请等待测量结束！")
+;C正向测量
+	MEAS=1 G91 G01 C360 F=1800;正向测量
+	STOPRE
+	WHILE($A_PROBE[1]==0)
+		MSG("测量错误,测头未检测到反向器孔。")
+		M0
+	ENDWHILE
+    G04F0.2
+	STOPRE
+	DR1=$AA_MM[C];记录第一次测量点角度
+
+	WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+		G91 G01 C-5 F=1800
+	ENDWHILE
+;C负向测量
+	MEAS=1 G91 G01 C-360 F=1800;负向测量
+	STOPRE
+	WHILE($A_PROBE[1]==0)
+		MSG("测量错误,测头未检测到反向器孔。")
+		M0
+	ENDWHILE
+    G04F0.2
+	STOPRE
+	DR2=$AA_MM[C];记录第一次测量点角度
+	WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+		G91 G01 C5 F=1800
+	ENDWHILE
+;反相器孔中心角度计算
+	IF DR1<DR2
+		DR2=DR2-360
+	ENDIF
+	TOOL_SET[44]=(DR1+DR2)/2;测头中心在滚道中心C角度
+	ANG_WITHIN_360(TOOL_SET[44])
+	G90 G01 C=DC(TOOL_SET[44]) F=1800;探针走向圆形孔C中心
+
+;Z左侧测量
+	MEAS=1 G91 G01 Z-30 F250;左侧测量
+	STOPRE
+	WHILE($A_PROBE[1]==0)
+		MSG("测量错误,测头未检测到反向器孔。")
+		M0
+	ENDWHILE
+    G04F0.2	
+    STOPRE
+	DR3=$AA_MM[Z];记录测量点坐标
+	WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+		G91 G01 Z2 F250
+	ENDWHILE
+;Z右侧测量
+	MEAS=1 G91 G01 Z30 F250;右侧快速粗测
+	STOPRE
+	WHILE($A_PROBE[1]==0)
+		MSG("测量错误,测头未检测到反向器孔。")
+		M0
+	ENDWHILE
+    G04F0.2
+	STOPRE
+	DR4=$AA_MM[Z];记录测量点坐标
+	WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+		G91 G01 Z-2 F250
+	ENDWHILE
+;计算
+STOPRE
+TOOL_SET[45]=(DR3+DR4)/2;测头在反相器孔中心时Z轴坐标
+G90 G01 Z=TOOL_SET[45] F500
+G90 G01 X=TOOL_SET[40]-10 F1500;
+G90 G01 Z=TOOL_SET[7] F4000;Z轴快速移动到测量安全位置
+M91;测头收回
+STOPRE
+WHILE($A_DBB[20]<>1);检测探头是否伸出到位
+    MSG("等待测头伸出到位!!!")
+    G04F F0.2
+ENDWHILE
+DR5=(TOOL_SET[45]-TOOL_SET[6]-0.5*GRIND[3]-POSITION[11]);将砂轮中心换算到滚道中心时Z轴坐标与磨削起始点直接的间距
+DR6=(DR5/GRIND[3]-TRUNC(6/GRIND[3]))*360;磨削起点到对刀点C轴旋转角度计算
+TOOL_SET[0]=TOOL_SET[44]-GRIND[0]*DR6;
+ANG_WITHIN_360(TOOL_SET[0])
+RET
+

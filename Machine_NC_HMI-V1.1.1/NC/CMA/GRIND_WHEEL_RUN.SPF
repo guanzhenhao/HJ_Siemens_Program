@@ -1,0 +1,27 @@
+PROC GRIND_WHEEL_RUN(REAL LINE_SPEED) DISPLOF
+;;**********程序功能**********
+;;砂轮启动 V1.1.1
+;LINE_SPEED砂轮线速度
+;;***************************
+DEF REAL DR0,DR1
+IF $A_DBB[12]==0;砂轮当前未启动
+    DR1=3;静止状态启动延时
+ELSE
+    DR1=0.5;启动状态变速延时
+ENDIF
+
+DR0=LINE_SPEED*60000/($PI*DRESSER[1]);依据线速度计算砂轮转速
+
+IF (CONFIG[3]==0) OR (CONFIG[3]==2);(0模拟量/1伺服/2异步电机)
+    R299=DR0
+    G4 F0.2
+    M13;砂轮启动
+ELSE
+    M1=3 S1=DR0
+ENDIF
+
+
+G4 F=DR1;砂轮转速等待时间
+RET
+
+

@@ -1,0 +1,107 @@
+PROC OPERATION_AUTO_YAO DISPLOF
+;;**********程序功能**********
+;;内螺纹自动对刀子程序程序V1.1.0
+;;探针测量腰形反相器孔孔动作程序
+;;***************************
+DEF REAL DR12,DR13,DR14,DR15,DR16,DR17,DR18,DR19,DR20,DR21,DR22,DR23,DR24,DR25,DR26,DR27,DR28,DR29
+
+DR12=INI[32]*COS(INI[31])				;腰型孔长投影到水平向长度DR12
+DR13=INI[32]*SIN(INI[31])				;腰型孔长投影到垂直向长度DR13
+DR14=DR13/($PI*INI[34])*360				;将垂直长度转换为C轴旋转角度DR14
+DR15=INI[33]*SIN(INI[31])				;腰型孔宽投影到水平向长度DR15
+DR16=INI[33]*COS(INI[31])				;腰型孔宽投影到垂直向长度DR16
+DR17=DR16/($PI*INI[34])*360				;将垂直宽度转换为C轴旋转角度DR17
+
+MSG("反相器孔测量开始,请等待测量结束！")
+;;宽度方向测量
+MEAS=1  G91	G01	Z=-DR15	C=-DR17 F=200   ;宽度方向右侧粗测
+STOPRE 
+IF  $AC_MEA[1]==0 GOTOF ERROR1         ;如果测头无信号
+WHILE($A_PROBE[1]==1)                   ;如果测头有信号
+    G91	G01	Z=0.1*DR15	C=0.1*DR17	F=200
+ENDWHILE
+MEAS=1 G91	G01	Z=-DR15	C=-DR17 F=50    ;精测
+STOPRE
+DR18=$AA_MM[Z]							;读取当前Z	DR18
+DR19=$AA_MM[C]							;读取当前C	DR19
+STOPRE
+WHILE($A_PROBE[1]==1)                   ;如果测头有信号
+    G91	Z=0.1*DR15 C=0.1*DR17 F=200
+ENDWHILE
+MEAS=1  G91	G01	Z=DR15 C=DR17 F=200     ;宽度方向左侧粗测
+STOPRE 
+IF $AC_MEA[1]==0 GOTOF ERROR1          ;如果测头无信号
+WHILE($A_PROBE[1]==1)                   ;如果测头有信号
+    G91	G01	Z=-0.1*DR15	C=-0.1*DR17 F=200
+ENDWHILE
+MEAS=1 G91	G01	Z=DR15 C=DR17 F=50      ;精测
+STOPRE
+DR20=$AA_MM[Z]							;读取当前Z	DR20
+DR21=$AA_MM[C]							;读取当前C	DR21
+
+DR22=(DR18+DR20)/2
+IF INI[31]<90
+	IF DR19>DR21
+        DR19=DR19-360
+    ENDIF						
+ELSE
+  	IF DR19<DR21						
+	    DR21=DR21-360			
+	ENDIF
+ENDIF
+DR23=(DR19+DR21)/2
+IF DR23<0
+DR23=DR23+360
+ENDIF 
+G90	G01	Z=DR22 C=DC(DR23) F=200
+
+;(腰型孔长度方向测量)
+MEAS=1 G91	G01	Z=-DR12 C=DR14 F=200    ;长度方向下侧粗测
+STOPRE
+IF  $AC_MEA[1]==0 GOTOF ERROR1         ;如果测头无信号
+WHILE($A_PROBE[1]==1)
+    G91	G01	Z=0.1*DR12	C=-0.1*DR14	F=50
+ENDWHILE
+MEAS=1  G91	G01	Z=-DR12 C=DR14 F=50     ;精测
+STOPRE
+DR24=$AA_MM[Z]							;读取当前Z	DR24
+DR25=$AA_MM[C]							;读取当前C	DR25
+WHILE($A_PROBE[1]==1)
+    G91	G01	Z=0.1*DR12	C=-0.1*DR14	F200    
+ENDWHILE
+MEAS=1  G91	G01	Z=DR12	C=-DR14	F=200   ;长度放下上侧粗测
+STOPRE
+IF $AC_MEA[1]==0 GOTOF ERROR1
+WHILE($A_PROBE[1]==1)
+    G91	G01	Z=-0.1*DR12 C=0.1*DR14 F=200
+ENDWHILE	
+MEAS=1  G91	G01	Z=DR12	C=-DR14	F=50    ;精测
+STOPRE
+DR26=$AA_MM[Z]							 ;读取当前Z	DR26
+DR27=$AA_MM[C]							 ;读取当前C	DR27
+TOOL_SET[1]=(DR24+DR26)/2						 ;腰型孔中心坐标Z
+IF DR25<DR27
+    DR27=DR27-360						
+ENDIF
+TOOL_SET[5]=(DR25+DR27)/2
+IF TOOL_SET[5]<360
+TOOL_SET[5]=TOOL_SET[5]+360                            ;腰型孔中心坐标C
+ENDIF
+G90 G01 Z=TOOL_SET[1] C=TOOL_SET[5] F200
+G90 G01 X=TOOL_SET[23]-INI[34]/2-5 F1000
+M34;测头收回
+DR28=(TOOL_SET[1]-TOOL_SET[10]-0.5*INI[5]-INI[6]);将砂轮中心换算到滚道中心时Z轴坐标与磨削起始点直接的间距
+DR29=(DR28/INI[5]-TRUNC(DR28/INI[5]))*360;磨削起点到对刀点C轴旋转角度计算
+TOOL_SET[4]=TOOL_SET[5]-INI[0]*DR29;(INI[0]左旋-1右旋+1)
+F_ANG_WITHIN_360(TOOL_SET[4]);将TOOL_SET[4]调整到0-360
+GOTOF END_RET
+
+;;报警提示定义
+ERROR1：;测头该有信号时没检测到测头信号报该错误
+MSG("测量错误，测头未检测到信号!!!")
+M0
+GOTOB ERROR1
+
+END_RET:
+RET
+

@@ -1,0 +1,41 @@
+PROC PLCASUP1 DISPLOF
+;;**********程序功能**********
+;;对刀计算程序(仅适用于内螺纹)V1.1.0
+;;***************************
+DEF REAL DR0,DR1,DR2,DR3,DR4,DR5,DR6
+DR0=R280;对刀完成后x轴坐标(用于磨削初始进刀位)
+DR1=R281;手动对刀完成后Z轴坐标
+DR2=$AC_DRF[Z];对刀完成时手轮偏置值
+DR3=$AC_DRF[X];对刀完成时手轮偏置值
+STOPRE
+IF(GRIND[22]==2);手动对刀
+ 	;依据对刀起点到磨削起点的距离差计算磨削起始角度
+	DR4=ABS(TOOL_SET[3]-POSITION[11]);当前位置到起始点的距离
+    DR5=DR4/GRIND[3]
+    DR6=(DR5-TRUNC(DR5))*360
+    TOOL_SET[0]=TOOL_SET[2]-GRIND[0]*DR6
+	ANG_WITHIN_360(TOOL_SET[0])
+    ;依据手动对刀中Z轴DRF值计算磨削起始角度
+	TOOL_SET[0]=TOOL_SET[0]+GRIND[0]*DR2/GRIND[3]*360
+    ANG_WITHIN_360(TOOL_SET[0])
+    STOPRE
+	IF TOOL_SET[5]==0;首件对刀赋值
+		POSITION[21]=DR0+ABS(DR1-POSITION[11])*GRIND[16];初始磨削接触点坐标
+		POSITION[1]=POSITION[21]
+		POSITION[7]=POSITION[21]-DRESSER[1]/2;磨削接触位置基准
+        TOOL_SET[5]=1;首件对刀结束后标记为非首件对刀
+	ENDIF
+ELSE;不是对刀
+	;;依据首轮偏置值计算相关坐标
+	POSITION[21]=POSITION[21]+DR3;初始磨削接触点坐标
+	POSITION[1]=POSITION[1]+DR3;磨削过程中调整磨削接触点坐标
+	POSITION[7]=POSITION[7]+DR3;磨削接触位置基准
+	TOOL_SET[0]=TOOL_SET[0]+GRIND[0]*DR2/GRIND[3]*360
+    ANG_WITHIN_360(TOOL_SET[0])
+ENDIF
+POSITION[8]=POSITION[5];转存修整基准,用于程序安全判断
+DRFOF
+RET
+
+
+

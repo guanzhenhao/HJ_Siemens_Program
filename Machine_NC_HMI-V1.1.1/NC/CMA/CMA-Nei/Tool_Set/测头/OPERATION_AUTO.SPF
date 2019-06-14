@@ -1,0 +1,53 @@
+PROC OPERATION_AUTO DISPLON
+;;**********程序功能**********
+;;内螺纹自动对刀程序V1.1.1
+;;适用于内螺纹探头测量反相器孔
+;;***************************
+MSG("正在运行到测量位置")
+G90 G01 Z=TOOL_SET[7] F4000;Z轴快速移动到测量安全位置
+G90 G01 C=TOOL_SET[9] F=10800;C轴移动到自动对刀角度
+G90 G01 X=TOOL_SET[40]-10 F3000;
+MSG("测头伸出中")
+M90
+G04F1
+STOPRE
+WHILE($A_DBB[21]<>1);检测探头是否伸出到位
+    MSG("等待测头伸出到位!!!")
+    G04F F0.2
+ENDWHILE
+MEAS=1 G90 G01 X=TOOL_SET[40]+TOOL_SET[41]*2 F=1500
+STOPRE
+WHILE($A_PROBE[1]==1)
+    MSG("测量错误。")
+    M0
+ENDWHILE
+MEAS=1 G91 G01 Z=-200 F=1000
+STOPRE
+WHILE($A_PROBE[1]==0)
+    MSG("测量错误,未检测到右端面。")
+    M0
+ENDWHILE
+G04F0.2
+STOPRE
+TOOL_SET[42]=$AA_MM[Z];记录右端面坐标
+WHILE($A_PROBE[1]==1)
+    G91 G01 Z=2 F=1000
+ENDWHILE
+STOPRE
+G91 G01 Z=50 F4000
+G90 G01 X=TOOL_SET[40]-10 F3000;
+G90 G01 Z=TOOL_SET[42]-TOOL_SET[43]-TOOL_SET[41];测头走到反相器孔中心
+MEAS=1 G90 G01 X=TOOL_SET[40]+2*TOOL_SET[41] F1500;测头进入反相器孔
+STOPRE
+WHILE($A_PROBE[1]==1)
+    MSG("测量错误。")
+    M0
+ENDWHILE
+STOPRE
+IF (TOOL_SET[46]==0)
+    OPERATION_AUTO_YUAN;调用圆形孔测量动作
+ELSE
+    OPERATION_AUTO_YAO;调用腰型孔测量动作
+ENDIF
+RET
+

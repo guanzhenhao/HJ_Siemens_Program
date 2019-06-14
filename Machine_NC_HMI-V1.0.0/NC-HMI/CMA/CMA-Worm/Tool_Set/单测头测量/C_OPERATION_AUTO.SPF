@@ -1,0 +1,101 @@
+PROC C_OPERATION_AUTO DISPLON
+;;**********程序功能**********
+;;蜗杆自动对刀程序 V1.0.0
+;;适用于接近开关测量
+;;***************************
+DEF REAL DR0,DR1,DR2,DR3,DR4,DR5,DR6
+;依据选择的加工方式确定自动对刀时使用的导程
+    IF GRIND[27]==0;正常磨削/双齿面磨削
+        DR6=GRIND[3]
+    ELSE
+        DR6=(GRIND[3]+GRIND[25])/2
+    ENDIF
+    MSG("正在运行到测量位置")
+    G01 G90 C=0 F10800;C轴快速移动到测量角度
+    TOOL_SET[2]=0
+LABLE0:
+    MSG("测头伸出中")
+    M33;侧头伸出
+    STOPRE
+    WHILE($A_DBB[8]<>1);检测侧头是否伸出到位
+        MSG("等待测头伸出到位中!!!")
+        G04 F0.2
+    ENDWHILE
+    STOPRE
+    IF $AC_MEA[1]==1;如果感应到信号,收回测头，C周旋转
+        M34;测头收回
+        STOPRE
+        WHILE($A_DBB[7]<>1)
+        MSG("等待测头收回到位中")
+        G04 F0.2
+        ENDWHILE
+        G01 G91 C15 F10800;Z轴快速移动到测量起始安全位置
+        GOTOB LABLE0
+    ENDIF
+
+;C轴正向旋转测量
+    MEAS=1 G91 G01 C=300 F=1080;第一次快速测量
+    STOPRE
+    WHILE($AC_MEA[1]==0);如果没有感应到信号
+    MSG("测量错误,测头未检测到信号")
+    M0
+    ENDWHILE
+    STOPRE
+    WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+    G91 G01 C=-15 F=1080
+    ENDWHILE
+    MEAS=1 G91 G01 C=300 F=360;第二次慢速测量
+    STOPRE
+    WHILE($AC_MEA[1]==0);如果没有感应到信号
+    MSG("测量错误,测头未检测到信号")
+    M0
+    ENDWHILE
+    DR0=$AA_MM[C];记录右侧感应点坐标
+    WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+    G91 G01 C=-15 F=1080
+    ENDWHILE
+
+;C轴负向旋转测量
+    MEAS=1 G91 G01 C=-300 F=1080;第一次快速测量
+    STOPRE 
+    WHILE($AC_MEA[1]==0);如果没有感应到信号
+    MSG("测量错误,测头未检测到信号")
+    M0
+    ENDWHILE
+    STOPRE
+    WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+    G91 G01 C=15 F=1080
+    ENDWHILE
+    MEAS=1 G91 G01 C=-300 F=360;第二次慢速测量
+    WHILE($AC_MEA[1]==0);如果没有感应到信号
+    MSG("测量错误,测头未检测到信号")
+    M0
+    ENDWHILE
+    DR1=$AA_MM[C];记录右侧感应点坐标
+    STOPRE
+    WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+    G91 G01 C=15 F=1080
+    ENDWHILE
+    STOPRE
+    IF DR0<DR1
+        DR1=DR1-360
+    ENDIF
+    DR2=(DR0+DR1)/2;测头中心在滚道中心C坐标
+    ANG_WITHIN_360(DR2);调整到0-360
+
+;计算C初始角
+    DR3=ABS(TOOL_SET[23]-POSITION[11]);计算砂轮与测头中心重合点Z到磨削起点Z距离
+    DR4=(DR3/DR6-TRUNC(DR3/DR6))*360;磨削起点到对刀点C轴旋转角度计算
+    TOOL_SET[0]=DR2-DR4+180
+    ANG_WITHIN_360(TOOL_SET[0]);调整到0-360
+    G01 G90 X=POSITION[17] F3500;测头快速移动到工件中心
+    M34;测头收回
+    G01 G90 Z=POSITION[15] F5000;Z轴快速移动到测量起始安全位置
+    WHILE($A_DBB[7]<>1)
+    MSG("等待测头收回到位中")
+    G04 F0.2
+    ENDWHILE
+
+RET
+
+

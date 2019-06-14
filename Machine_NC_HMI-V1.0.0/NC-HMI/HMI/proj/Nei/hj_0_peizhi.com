@@ -1,0 +1,82 @@
+;;;;;;;;;;;;;;;;;;;机床配置界面;;;;;;;;;;;;;;;;;;;;;;;;;
+//M(Mask0/$85020/"blank.png"/)
+CONFIG[1]=0;有无自动门0=无/CONFIG[0]1=有
+CONFIG[2]=0;有无自动螺旋角0=无/1=有
+CONFIG[3]=0;砂轮类型选择(0模拟量/1伺服/2异步电机)
+CONFIG[4]=0;修整轮类型选择(0模拟量/1伺服2异步电机)
+CONFIG[8]==0;成型V与VW修整同时开放 0=否、1=是
+TOOL_SET[4]=0;对刀方式选择(0=ZC差不对刀/1=静止对刀)
+DRESSER[34]=1;0抬刀半个砂轮宽度、1偏置半个砂轮宽度
+	DEF VAR0=(I/*0="无",1="有"//"有无自动对刀","有无自动对刀",,/WR2/"panel_1_1_chs.png"/"/NC/_N_NC_GD2_ACX/CONFIG[1]"/380,10,190/460,10,70/7,4);有无自动对刀
+	DEF VAR1=(R3///$85176,$85176,$85055,/WR1//"/NC/_N_NC_GD2_ACX/TOOL_SET[1]"/25,310,205/120,310,70/3,4);头架初始角度
+	DEF VAR2=(R3///$85169,$85169,$85043,/WR1//"/NC/_N_NC_GD2_ACX/POSITION[22]"/10,330,220/120,330,70/3,4);初始磨削接触位置
+	DEF VAR3=(R3///$85158,$85158,$85043,/WR1//"/NC/_N_NC_GD2_ACX/POSITION[2]"/10,350,220/120,350,70/3,4);当前磨削接触位置
+	DEF VAR4=(R3///$85126,$85126,$85043,/WR1//"/NC/_N_NC_GD2_ACX/POSITION[8]"/380,290,190/460,290,70/3,4);磨削基准
+	DEF VAR5=(R3/-0.5,0.5//$85174,$85174,$85043,/WR2/"panel_1_17_chs.png"/"/NC/_N_NC_GD2_ACX/GRIND[20]"/380,310,190/460,310,70/7,4);中径调整
+	DEF VAR6=(R3/-0.5,0.5//$85175,$85175,$85043,/WR2/"panel_1_16_chs.png"/"/NC/_N_NC_GD2_ACX/GRIND[13]"/380,330,190/460,330,70/7,4);偏刀调整
+	DEF VAR7=(R3/-0.5,0.5//$85105,$85105,$85043,/WR2//"/NC/_N_NC_GD2_ACX/GRIND[19]"/380,350,220/460,350,70/7,4);全长导程补偿
+	DEF VAR8=(R/*0=$85180,1=$85181,2=$85182//$85101,$85101,,/WR1,ac1//"/NC/_N_NC_GD2_ACX/CONFIG[7]"/0,0,0/380,10,70/3,4);修整器结构选择
+	DEF VAR9=(R/*0=$85087,1=$85088//$85089,$85089,,/WR2/"panel_1_0_chs.png"/"/NC/_N_NC_GD2_ACX/TOOL_SET[6]"/0,0,0/290,10,70/7,4);是否首件对刀
+;;按键定义
+	HS1=($85001,ac7,se3)
+	HS2=($85003,ac7,se1)
+	HS3=($85002,ac7,se1)
+	HS4=($85010,ac7,se1)
+	VS8=($85005,ac7,se1)
+	PRESS(HS1)
+		LM("Mask0","hj_0_moxue.com",0);磨削界面
+	END_PRESS
+	PRESS(HS2)
+		IF VAR8.VAL==0
+			LM("Mask0","hj_0_xiuzheng.com",0);修整界面
+		ENDIF
+		IF VAR8.VAL==1
+			LM("Mask1","hj_0_xiuzheng.com",0);修整界面
+		ENDIF
+		IF VAR8.VAL==2
+			LM("Mask2","hj_0_xiuzheng.com",0);修整界面
+		ENDIF
+	END_PRESS
+	PRESS(HS3)
+		IF	VAR0.VAL==0
+			LM("Mask0","hj_0_gongyi.com",0);磨削界面
+		ELSE
+			LM("Mask1","hj_0_gongyi.com",0);磨削界面
+		ENDIF
+	END_PRESS
+	PRESS(HS4)
+		LM("Mask0","hj_0_duidao.com",0);修整界面
+	END_PRESS
+	PRESS(VS8)
+		EXIT
+	END_PRESS
+
+;;CHANGE事件
+	CHANGE( VAR_GRD10)
+		CALL("UP3")
+	END_CHANGE
+	CHANGE( VAR_GRD14)
+		CALL("UP3")
+	END_CHANGE
+	SUB(UP2);;导程计算
+		VAR_GRD2.VAL=VAR_GRD1.VAL*VAR_GRD3.VAL
+	END_SUB
+	SUB(UP3);;螺旋升角
+		IF VAR_GRD10.VAL==1
+			VAR_GRD11.WR=1
+			VAR_GRD12.WR=1
+			VAR_GRD13.WR=1
+			VAR_GRD14.WR=2
+		ELSE
+			VAR_GRD11.WR=2
+			VAR_GRD12.WR=2
+			VAR_GRD13.WR=2
+			VAR_GRD14.WR=4
+		ENDIF
+		IF (VAR_GRD14.VAL>0)AND(VAR_GRD10.VAL==1)
+			VAR_GRD11.VAL=SDEG(ATAN((VAR_GRD1.VAL*VAR_GRD3.VAL),(PI*VAR_GRD14.VAL)))
+			VAR_GRD12.VAL=(SDEG(ATAN((VAR_GRD1.VAL*VAR_GRD3.VAL),(PI*VAR_GRD14.VAL)))-VAR_GRD11.VAL)*60
+			VAR_GRD13.VAL=((SDEG(ATAN((VAR_GRD1.VAL*VAR_GRD3.VAL),(PI*VAR_GRD14.VAL)))-VAR_GRD11.VAL)*60-VAR_GRD12.VAL)*60
+		ENDIF
+	END_SUB
+//END

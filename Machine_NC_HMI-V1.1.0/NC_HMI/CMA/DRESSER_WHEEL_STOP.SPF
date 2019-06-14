@@ -1,0 +1,17 @@
+PROC DRESSER_WHEEL_STOP DISPLOF
+;;**********程序功能**********
+;;修整轮停止 V1.1.0
+;;***************************
+IF (CONFIG[4]==0) OR (CONFIG[4]==2);修整轮类型选择
+    M65
+ELSE
+    IF (CONFIG[3]==0) OR (CONFIG[3]==2)
+        M1=5
+    ELSE
+        M2=5
+    ENDIF
+ENDIF
+
+RET
+
+

@@ -1,0 +1,44 @@
+PROC OPERATION_JOG DISPLOF
+;;**********程序功能**********
+;;手动对刀程序(仅适用于外螺纹) V1.0.0
+;;***************************
+GRIND_WHEEL_RUN(25);砂轮启动
+
+IF TOOL_SET[12]==0;起点对刀
+    G90 G01 C=ACP(0) F=10800;手动对刀C轴初始角度为0°
+    MSG("正在移动至磨削起点!!!")
+    G90 G01 Z=POSITION[11] F4500;Z轴快速移动到磨削起点
+    MSG("正在移动至对刀起始位!!!")
+    G90 G01 X=POSITION[13] F3500;X轴快速移动到安全位置
+ENDIF
+IF TOOL_SET[12]==1;中点对刀
+    G90 G01 C=ACP(0) F=10800;手动对刀C轴初始角度为0°
+    MSG("正在移动至磨削中点!!!")
+    G90 G01 Z=POSITION[14] F4500;Z轴快速移动到磨削起点
+    MSG("正在移动至对刀起始位!!!")
+    G90 G01 X=POSITION[13] F3500;X轴快速移动到安全位置
+ENDIF
+IF TOOL_SET[12]==2;任一点对刀
+    G90 G01 C=ACP(0) F=10800;手动对刀C轴初始角度为0°
+    MSG("正在移动至对刀起始位!!!")
+    G90 G01 X=POSITION[13] F3500;X轴快速移动到安全位置
+ENDIF
+STOPRE
+G04 F0.5
+TOOL_SET[2]=$AA_IM[C];读取C轴初始角度 
+TOOL_SET[3]=$AA_IM[Z];读取对刀开始时Z轴坐标
+
+MSG("手动对刀已启动,请进行对刀操作")
+IF TOOL_SET[4]==0;;对刀模式(zc插补0/静止对刀1)
+    Z_C_INTERPOLATION(TOOL_SET[3],POSITION[12],5);手动对刀时头架转速5转
+ELSE
+    MSG("静态对刀已启动,对刀完成后再次启动程序!!!")
+    M0
+    STOPRE
+    R280=$AA_IM[X]
+    R281=$AA_IM[Z]
+ENDIF
+PLCASUP1;跳转到初始角度计算子程序
+G90 G01 X=POSITION[2] F3500;X轴快速移动到装夹位
+RET
+

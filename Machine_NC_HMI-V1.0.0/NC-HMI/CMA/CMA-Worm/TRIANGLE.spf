@@ -1,0 +1,109 @@
+PROC TRIANGLE
+;类型  梯形齿形   
+R35=2     ;齿顶宽
+R36=6     ;齿型高度
+R37=15     ;左侧角度
+R38=15     ;右侧角度
+
+DIAMOF
+IF(ABS(R29-0.500)>0.1)
+  MSG("修正圆弧半径设置错误！系统设置为: 0.500  R29参数设置为:"<<R29)
+  M0
+  GOTOF CUTEND
+ENDIF
+R28=ABS(R28)
+
+;通过当前接触位置(R7)校正砂轮直径(R9)
+IF(R9>(R7-R15-0.500)*2)
+  R7=R9/2+R15+0.500
+ENDIF
+R9=(R7-R15-0.500)*2
+;修整速度设置为粗修速度与进给量
+R26=R18
+R27=R20
+;修整程序开始
+G94 G64
+M_OPEN
+;设置修整次数=1
+R25=1
+STRIM: 
+;修整结束判断:达到修整次数
+IF(R25>R3)  GOTOF TRIMEND
+;重新计算砂轮直径
+IF(R9>(R7-R15-0.500)*2)
+  R7=R9/2+R15+0.500
+ENDIF
+R9=(R7-R15-0.500)*2
+;设置修整速度
+R26=R18
+IF(R25==R3)
+  R26=R19
+ENDIF
+;计算新的位置(减去修整量)
+R7=R7-R27
+
+;检验砂轮宽度是不是足够
+IF(R8<3) 
+  R8=3
+ENDIF
+R30=R14+R10/2+(0.000)
+F=R22
+;编程设置零点偏移
+TRANS  AX[AX_W]=R30 AX[AX_V]=R7
+MSG("左侧修整 砂轮直径:"<<R9<<"  修整位置:"<<R7<<"  修整次数:"<<R25<<" 进给量:"<<R27)
+;垂直轴移动到安全距离
+G90 G01 AX[AX_V]=1.000
+;判断是否到位
+IF($AA_IM[AX_V]<=R7) GOTOF ABORT;
+AX[AX_W]=-R35/2-1
+AX[AX_V]=0 F=R26
+AX[AX_W]=-R35/2
+AX[AX_W]=-R35/2-R36*TAN(R37) AX[AX_V]=-R36
+LELB3500:
+;修整结束,退出砂轮边缘外2mm
+G01 AX[AX_W]=-(R8/2+2+0.500) AX[AX_V]=-R36-5 F200
+TRANS
+;修整右侧砂轮
+MSG("右侧修整 砂轮直径:"<<R9<<"  修整位置:"<<R7<<"  修整次数:"<<R25<<" 进给量:"<<R27)
+R30=R14-R10/2-(0.000)
+TRANS  AX[AX_W]=R30 AX[AX_V]=R7+R11
+G90 G01 AX[AX_V]=1.000 F=R22
+IF($AA_IM[AX_V]<=R7+R11) GOTOF ABORT;
+AX[AX_W]=-R35/2-1
+AX[AX_V]=0 F=R26
+AX[AX_W]=R35/2
+AX[AX_W]=R35/2+R36*TAN(R38) AX[AX_V]=-R36
+
+RELB3500:
+AX[AX_W]=(R8/2+2+0.500) AX[AX_V]=-R36-5 F200
+TRANS
+
+;重新计算砂轮直径
+R9=(R7-R15-0.500)*2
+;计算参数
+R25=R25+1
+R27=R20
+IF(R25==R3)
+  R27=R21
+ENDIF
+R185=R185+R27
+GOTOB STRIM
+TRIMEND:
+;修整结束返回指定停泊位置,并清除累计次数
+MSG("修整结束返回，请稍侯")
+G90 G01 AX[AX_V]=R17 F=R23
+AX[AX_W]=R16
+M_CLOSE
+GOTOF CUTEND
+;修整异常中断入口,关闭各项M指令
+ABORT:
+M_CLOSE
+;程序结束
+CUTEND:
+M_CLOSE
+GOTOF PROGEND
+;程序结束并生成发送结束标识
+PROGEND:
+M02
+
+

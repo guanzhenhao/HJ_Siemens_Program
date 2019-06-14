@@ -1,0 +1,29 @@
+PROC M_OPEN SAVE DISPLOF
+;;**********程序功能**********
+;;V1.0.0
+;;***************************
+G90 G01 AX[AX_V]=R17 F1000
+G90 G01 AX[AX_W]=R16 F3000
+STOPRE
+IF DRESSER[7]==0;新砂轮
+	R7= R7+DRESSER[29]/2;当前修整接触点抬高半个砂轮宽度
+ENDIF
+
+IF ABS($AA_IM[A]-0.0)<0.0001 GOTOF MARK
+	M35
+	G4F0.2
+	IF $AA_IM[A]>0
+		G90G01A-0.5F100
+	ELSE
+		G90G01A0.5F100
+	ENDIF
+	A0.0
+	M36
+	G4F0.2
+ENDIF
+MARK:
+	R185=0
+	;修整冷却启动
+	M28
+RET
+

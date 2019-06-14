@@ -1,0 +1,134 @@
+PROC C_OPERATION_AUTO DISPLON
+;;**********程序功能**********
+;;蜗杆自动对刀程序 V1.1.0
+;;适用于接近开关测量-探针测量端面
+;;***************************
+DEF REAL DR0,DR1,DR2,DR3,DR4,DR5,DR6,DR9,DR10
+;依据选择的加工方式确定自动对刀时使用的导程
+    IF GRIND[27]==0;正常磨削/双齿面磨削
+        DR6=GRIND[3]
+    ELSE
+        DR6=(GRIND[3]+GRIND[25])/2
+    ENDIF
+    MSG("正在运行到测量位置")
+    G01 G90 C=0 F14400;C轴快速移动到测量角度
+    TOOL_SET[2]=0
+LABLE0:
+    MSG("测头伸出中")
+    WHILE($A_PROBE[1]==1);如果感应到信号,收回测头，C周旋转
+        G01 G91 C90 F14400;Z轴快速移动到测量起始安全位置
+    ENDWHILE
+;C轴正向旋转测量
+    MEAS=1 G91 G01 C=300 F=7200;第一次快速测量
+    STOPRE
+    WHILE($AC_MEA[1]==0);如果没有感应到信号
+    MSG("测量错误,测头未检测到信号")
+    M0
+    ENDWHILE
+    STOPRE
+    WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+    G91 G01 C=-45 F=7200
+    ENDWHILE
+    STOPRE
+    MEAS=1 G91 G01 C=300 F=1440;第二次慢速测量
+    STOPRE
+    WHILE($AC_MEA[1]==0);如果没有感应到信号
+    MSG("测量错误,测头未检测到信号")
+    M0
+    ENDWHILE
+    DR0=$AA_MM[C];记录右侧感应点坐标
+    WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+    G91 G01 C=-45 F=7200
+    ENDWHILE
+
+;C轴负向旋转测量
+    MEAS=1 G91 G01 C=-300 F=7200;第一次快速测量
+    STOPRE 
+    WHILE($AC_MEA[1]==0);如果没有感应到信号
+    MSG("测量错误,测头未检测到信号")
+    M0
+    ENDWHILE
+    STOPRE
+    WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+    G91 G01 C=45 F=7200
+    ENDWHILE
+    MEAS=1 G91 G01 C=-300 F=1440;第二次慢速测量
+    WHILE($AC_MEA[1]==0);如果没有感应到信号
+    MSG("测量错误,测头未检测到信号")
+    M0
+    ENDWHILE
+    DR1=$AA_MM[C];记录右侧感应点坐标
+    STOPRE
+    WHILE($A_PROBE[1]==1);如果感应到信号，反向离开
+    G91 G01 C=45 F=7200
+    ENDWHILE
+    STOPRE
+    IF DR0<DR1
+        DR1=DR1-360
+    ENDIF
+    DR2=(DR0+DR1)/2;测头中心在滚道中心C坐标
+    ANG_WITHIN_360(DR2);调整到0-360
+
+;计算C初始角
+    DR3=ABS(TOOL_SET[23]-POSITION[11]);计算砂轮与测头中心重合点Z到磨削起点Z距离
+    DR4=(DR3/DR6-TRUNC(DR3/DR6))*360;磨削起点到对刀点C轴旋转角度计算
+    TOOL_SET[0]=DR2-DR4+180
+    ANG_WITHIN_360(TOOL_SET[0]);调整到0-360
+    STOPRE
+    IF TOOL_SET[29]==0 GOTOF END_0
+;;测量端面
+    IF TOOL_SET[31]=0;0=左端面测量、1=右端面测量
+        DR10=-1
+    ELSE
+        DR10=1
+    ENDIF
+    G90 G01 X=TOOL_SET[25]+15 F3000
+    G90 G01 Z=TOOL_SET[26]+DR10*5 F3500
+    RESET_ANGLE
+    M90;测头伸出
+    STOPRE
+    WHILE($A_DBB[21]<>1);检测侧头是否伸出到位
+        MSG("等待测头伸出到位中!!!")
+        G04 F0.2
+    ENDWHILE
+    G04 F2
+    MEAS=2 G90 G01 X=TOOL_SET[25]+1 F500
+    G04 F0.1
+    STOPRE
+    WHILE($A_PROBE[2]==1);如果有感应到信号
+        MSG("测量错误,测头X向进给碰撞，请检查设定参数")
+        M0
+    ENDWHILE
+
+    MEAS=2 G90 G01 Z=TOOL_SET[26]-DR10*5 F100
+    G04 F0.1
+    STOPRE
+    WHILE($A_PROBE[2]==0);如果没有感应到信号
+        MSG("测量错误,测头Z向寻找端面失败，请检查设定参数")
+        M0
+    ENDWHILE
+    TOOL_SET[27]=$AA_MM[Z];记录端面坐标
+    G90 G01 Z=TOOL_SET[26]+DR10*5
+    M91;探针收回
+    WHILE($A_DBB[20]<>1)
+        MSG("等待测头收回到位中")
+        G04 F0.2
+    ENDWHILE
+;;依据端面位置误差,调整磨削初始角度
+    STOPRE
+    IF TOOL_SET[5]==0;首件
+        TOOL_SET[28]=TOOL_SET[27];记录首件端面Z
+        TOOL_SET[5]=1
+    ENDIF
+    DR9=TOOL_SET[27]-TOOL_SET[28]
+    TOOL_SET[0]=TOOL_SET[0]+GRIND[0]*(-1*DR9/DR6*360)
+    ANG_WITHIN_360(TOOL_SET[0]);调整到0-360
+    G90 G01 X=TOOL_SET[25]+20 F3000
+    ROTATE_ANGLE;自动螺旋升角
+
+END_0:
+    TOOL_SET[21]=TOOL_SET[0]
+
+RET
+
+

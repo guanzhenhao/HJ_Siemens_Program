@@ -1,0 +1,28 @@
+PROC ROTATE_ANGLE DISPLON
+;;**********程序功能**********
+;;螺旋升角 V1.0.0
+;;***************************
+;计算升角值
+IF CONFIG[2]==1
+    GRIND[23]=-GRIND[0]*(GRIND[8]+GRIND[9]/60+GRIND[10]/3600);计算升角值
+	;螺旋升角值
+	IF TRUNC($AA_IM[A]*1000)<>TRUNC(GRIND[23]*1000)
+		M73;液压开
+		G4 F1
+		M35;松开
+		WHILE($A_DBB[14]==0);未松开
+			G4 F0.2
+		ENDWHILE
+		G4 F1
+		MSG("螺旋升角到位中")
+		G90 G01 A=GRIND[23]-1 F=100
+		G90 G01 A=GRIND[23] F=100
+		STOPRE
+		G4 F0.5
+		M36;夹紧
+		G4 F1
+		M74;液压关
+	ENDIF
+ENDIF
+RET
+

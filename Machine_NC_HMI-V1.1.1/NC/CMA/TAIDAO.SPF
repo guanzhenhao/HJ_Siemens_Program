@@ -1,0 +1,64 @@
+PROC TAIDAO  DISPLOF
+;;**********程序功能**********
+;插补修整,新砂轮时抬到量计算子程序
+;;***************************
+DEF REAL DR0,DR1,DR2,DR3,DR4,DR5,DR6,DR7,DR8,DR9,DR10,DR11,DR12,DR13,DR14,DR15,DR16,DR17,DR18,DR19,DR20,DR21
+IF (DRESSER[27]==0)OR(DRESSER[27]==1)
+    DR1=DRESSER[29];砂轮宽度
+    DR2=TRAP[1];齿顶宽
+    DR3=TRAP[0];梯形尺高
+    DR7=TRAP[12];拉出斜线与水平线夹角
+    DR8=DRESSER[4];左右滚轮高度差
+    ;右侧砂轮修整赋值
+    DR0=DRESSER[6];滚轮圆弧半径
+    DR4=TRAP[16];齿顶过渡圆弧半径
+    DR5=TRAP[11];齿形角
+    DR6=TRAP[20];齿底过渡圆弧半径
+    ;坐标计算
+    BEGIN:DR10=DR2/2
+    DR11=DR10+(DR0+DR4)*COS(DR5)
+    DR12=-(DR0+DR4)*(1-SIN(DR5))
+    DR13=DR11+(DR3-(DR4+DR6)*(1-SIN(DR5)))*TAN(DR5)
+    DR14=(DR6-DR0)*(1-SIN(DR5))-DR3
+    DR15=DR13+(DR6-DR0)*COS(DR5)
+    DR16=-DR3
+    DR17=DR15+DR0*TAN(DR7/2)
+    DR18=DR1/2+2
+    END:DR19=-DR3-(DR18-DR17)*TAN(DR7)
+    DR20=ABS(DR19)
+    STOPRE
+    ;左侧砂轮修整赋值
+    DR0=DRESSER[5];滚轮圆弧半径
+    DR4=TRAP[15];齿顶过渡圆弧半径
+    DR5=TRAP[10];齿形角
+    DR6=TRAP[19];齿底过渡圆弧半径
+    ;坐标计算
+    REPEAT BEGIN END
+    DR21=ABS(DR19)
+ENDIF
+IF DRESSER[27]==2
+    ;左侧滚道圆弧点位计算
+    DR1=DARC[9]+DRESSER[5]
+    DR2=SQRT((DR1*DR1)-(DARC[14]*DARC[14]));第二点的X值
+    DR3=DARC[9]-DARC[14];第二点的Y值
+    DR4=(DRESSER[29]/2)+2+DARC[12];终点X值
+    DR5=DR3+(TAN(45)*(DR4-DR2));终点Y值
+    DR20=ABS(DR5)
+    ;右侧滚道圆弧点位计算
+    DR6=DARC[10]+DRESSER[6]
+    DR7=SQRT((DR6*DR6)-(DARC[15]*DARC[15]));第二点的X值
+    DR8=DARC[10]-DARC[15];第二点的Y值
+    DR9=(DRESSER[29]/2)+2+DARC[13];终点X值
+    DR10=DR8+(TAN(45)*(DR9-DR7));终点Y值
+    DR21=ABS(DR10)
+ENDIF
+STOPRE
+IF DR21>=DR20
+    DRESSER[37]=DR21
+ELSE
+    DRESSER[37]=DR20
+ENDIF
+RET
+
+
+

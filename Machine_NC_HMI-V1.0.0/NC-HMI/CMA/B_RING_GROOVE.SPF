@@ -1,0 +1,15 @@
+PROC B_RING_GROOVE DISPLOF
+;;***********程序功能**********
+;;手动磨环形槽  V1.0.0
+;;****************************
+
+IF $A_DBB[6]==1;C轴旋转键选中
+    GRIND_WHEEL_RUN(PROCESSER[5]);使用粗磨时砂轮线速度
+    CYCLE:
+    MSG("头架旋转中...")
+        G91 C=360000 F=3600;头架旋转
+    GOTOB CYCLE
+ENDIF
+
+RET
+

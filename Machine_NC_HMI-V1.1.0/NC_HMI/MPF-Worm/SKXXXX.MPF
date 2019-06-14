@@ -1,0 +1,22 @@
+;***********机床信息**********
+;*机床型号:
+;*机床名称:
+;*出厂编号:
+;*用户名称:
+;*调试日期:
+;*程序版本：V1.1.0 
+DRFOF
+STOPRE
+    IF $A_DBB[6]==1;C轴旋转键选中
+        B_RING_GROOVE
+    ELSE
+        IF GRIND[27]==0
+            A_GRINDING;正常蜗杆磨削
+        ENDIF
+        IF GRIND[27]==1
+            A_GRINDING_1;双齿面蜗杆磨削
+        ENDIF
+    ENDIF
+
+M30
+

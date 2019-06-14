@@ -1,0 +1,31 @@
+;**********程序功能**********
+;自定义全局变量
+;***************************
+DEF NCK STRING[1] AXIS_VER;垂直轴
+DEF NCK STRING[1] AXIS_HORI;水平轴
+DEF NCK AXIS AX_W;水平轴名
+DEF NCK AXIS AX_V;垂直轴名
+DEF NCK STRING[20] SHAPE;齿形程序名称
+DEF NCK STRING[20] WORM_SHAPE;齿形程序名称
+;机床配置参数
+DEF NCK REAL CONFIG[10]
+;轴位置参数
+DEF NCK REAL POSITION[30]
+;修整参数
+DEF NCK REAL DRESSER[50]
+;磨削参数
+DEF NCK REAL GRIND[40]
+;工艺参数
+DEF NCK REAL PROCESSER[200]
+;;对刀参数
+DEF NCK REAL TOOL_SET[30]
+;参数锁
+DEF NCK REAL SWITCH[10]
+;梯形(三角形)参数
+DEF NCK REAL TRAP[30]
+;双圆弧参数
+DEF NCK REAL DARC[30]
+
+M30
+
+

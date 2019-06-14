@@ -1,0 +1,28 @@
+PROC RESET_ANGLE DISPLON
+;;**********程序功能**********
+;;螺旋升角复位 V1.0.0
+;;***************************
+
+IF CONFIG[2]==1
+	IF TRUNC($AA_IM[A]*1000)<>0
+		M73;液压开
+		G4 F1
+		M35;松开
+		WHILE($A_DBB[14]==0);未松开
+			G4 F0.2
+		ENDWHILE
+		G4 F1
+		MSG("螺旋升角置零中")
+		G90 G01 A=-1 F=100
+		G4 F0.5
+		G90 G01 A=0 F=100
+		STOPRE
+		G4 F0.5
+		M36;夹紧
+		G4 F1
+		M74;液压关
+	ENDIF
+ENDIF
+
+RET
+
